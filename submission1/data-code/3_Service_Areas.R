@@ -4,7 +4,7 @@
 
 
 ## Read in monthly files, append to yearly file, fill in missing info, and collapse down to yearly file
-for (y in 2010:2015) {
+for (y in 2010:2015) { {
     ## Pull service area data by contract/month
     ma.path=paste0("data/input/monthly-ma-contract-service-area/MA_Cnty_SA_",y,"_01.csv")
     service.area=read_csv(ma.path,skip=1,
@@ -25,7 +25,6 @@ for (y in 2010:2015) {
     service.area = service.area %>%
       mutate(year=y)
   }
-  
   
   ## Fill in missing fips codes (by state and county)
   # Fill missing fips codes (by state and county)
@@ -50,7 +49,7 @@ service.area = service.area %>%
 
   
   assign(paste("service.area.",y,sep=""),service.area)  
-
+}
 
 contract.service.area=rbind(service.area.2010,
                             service.area.2011,service.area.2012,service.area.2013,service.area.2014,service.area.2015)
