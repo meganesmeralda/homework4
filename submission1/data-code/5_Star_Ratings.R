@@ -3,7 +3,7 @@
 ##############################################################################
 
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse, ggplot2, dplyr, lubridate, stringr, readxl, data.table, gdata, plyr)
+pacman::p_load(tidyverse, ggplot2, dplyr, lubridate, stringr, readxl, data.table, gdata)
 source("submission1/data-code/rating_variables.R")
 
 ## Assign yearly datasets and clean star rating information

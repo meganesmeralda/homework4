@@ -4,7 +4,7 @@
 
 
 ## Read in monthly files, append to yearly file, fill in missing info, and collapse down to yearly file
-for (y in 2010:2015) {{
+for (y in 2010:2015) {
     ## Pull market penetration data by contract/month
     ma.path=paste0("data/input/monthly-ma-state-and-county-penetration/State_County_Penetration_MA_",y,"_01.csv")
     pene.data=read_csv(ma.path,skip=1,
@@ -23,25 +23,18 @@ for (y in 2010:2015) {{
                          eligibles = col_number(),
                          enrolled = col_number(),
                          penetration = col_number()
-                       ), na="*")
-    
-    ## Add month and year data
-    pene.data = pene.data %>%
+                       ), na="*") %>%
       mutate(year=y)
-    
-      ma.penetration=pene.data
-  }
-  
-  
+      
   ## Fill in missing fips codes (by state and county)
-  ma.penetration = ma.penetration %>%
+  pene.data = pene.data %>%
     group_by(state, county) %>%
     fill(fips)
 
   ## Collapse to yearly data
-  ma.penetration = ma.penetration %>%
+  ma.penetration = pene.data %>%
     group_by(fips,state,county) %>%
-    summarize(avg_eligibles=mean(eligibles),sd_eligibles=sd(eligibles),
+    dplyr::summarize(avg_eligibles=mean(eligibles),sd_eligibles=sd(eligibles),
               min_eligibles=min(eligibles),max_eligibles=max(eligibles),
               first_eligibles=first(eligibles),last_eligibles=last(eligibles),
               avg_enrolled=mean(enrolled),sd_enrolled=sd(enrolled),
@@ -49,7 +42,7 @@ for (y in 2010:2015) {{
               first_enrolled=first(enrolled),last_enrolled=last(enrolled),              
               year=last(year),ssa=first(ssa))
   
-  assign(paste0("ma.pene.",y),ma.penetration)  
+  assign(paste0("ma.pene.",y),ma.penetration) 
 }
 
 ma.penetration.data=rbind(ma.pene.2010,ma.pene.2011,ma.pene.2012,
