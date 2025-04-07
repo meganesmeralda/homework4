@@ -1,6 +1,7 @@
 #########################################################################
 ## Read in enrollment data for january of each year
 #########################################################################
+ma.path=paste0("data/input/monthly-ma-and-pdp-enrollment-by-cpsc/CPSC_Contract_Info_",y,"_01.csv")
 
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, ggplot2, dplyr, lubridate, stringr, readxl, data.table, gdata)
@@ -28,9 +29,9 @@ for (y in 2010:2015) {
                            contract_date = col_character()
                          ))
 
-  contract.info = contract.info %>%
+  contract.info <- contract.info %>%
     group_by(contractid, planid) %>%
-    mutate(id_count=row_number())
+    dplyr::mutate(id_count = dplyr::row_number())
     
   contract.info = contract.info %>%
     filter(id_count==1) %>%
@@ -76,7 +77,7 @@ for (y in 2010:2015) {
   plan.year = plan.data %>%
     group_by(contractid, planid, fips) %>%
     arrange(contractid, planid, fips) %>%
-    rename(avg_enrollment=enrollment)
+    dplyr::rename(avg_enrollment = enrollment)
   
   write_rds(plan.year,paste0("data/output/ma_data_",y,".rds"))
 }

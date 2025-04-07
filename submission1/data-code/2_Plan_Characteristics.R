@@ -1,6 +1,8 @@
 #########################################################################
 ## Read and clean data basic premium and deductible information
 #########################################################################  
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, ggplot2, dplyr, lubridate, stringr, readxl, data.table, gdata)
 
 ## Raw 2010 data
 ma.path.2010a=paste0("data/input/ma-plan-characteristics/2010LandscapeSourceData_MA_12_01_09_A_to_M.csv")
@@ -494,13 +496,12 @@ for (y in 2010:2015) {
   ## Remove duplicates
   ma.data = ma.data %>%
     group_by(contractid, planid, state, county) %>%
-    mutate(id_count=row_number())
+    dplyr::mutate(id_count=row_number())
   
   ma.data = ma.data %>%
     filter(id_count==1) %>%
     select(-id_count)
 
-    
   ############ CLEAN MA-PD Data #####################
   macd.data=get(paste0("macd.data.",y))
   macd.data = macd.data %>% 
@@ -515,7 +516,7 @@ for (y in 2010:2015) {
   ## Remove duplicates
   macd.data = macd.data %>%
     group_by(contractid, planid, state, county) %>%
-    mutate(id_count=row_number())
+    dplyr::mutate(id_count=row_number())
   
   macd.data = macd.data %>%
     filter(id_count==1) %>%
@@ -531,8 +532,8 @@ for (y in 2010:2015) {
   } else {
     plan.premiums=rbind(plan.premiums,ma.macd.data)
   }
+} 
   
-  
-}
+
 
 write_rds(plan.premiums,"data/output/plan_premiums.rds")

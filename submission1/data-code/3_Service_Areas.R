@@ -41,7 +41,7 @@ service.area = service.area %>%
   ## Collapse to yearly data
   service.area = service.area %>%
     group_by(contractid, fips) %>%
-    mutate(id_count=row_number())
+    dplyr::mutate(id_count=row_number())
   
   service.area = service.area %>%
     filter(id_count==1) %>%

@@ -4,7 +4,7 @@
 
 
 ## Read in monthly files, append to yearly file, fill in missing info, and collapse down to yearly file
-for (y in 2010:2015) {
+for (y in 2010:2015) {{
     ## Pull market penetration data by contract/month
     ma.path=paste0("data/input/monthly-ma-state-and-county-penetration/State_County_Penetration_MA_",y,"_01.csv")
     pene.data=read_csv(ma.path,skip=1,
@@ -29,11 +29,7 @@ for (y in 2010:2015) {
     pene.data = pene.data %>%
       mutate(year=y)
     
-    if (step==1) {
       ma.penetration=pene.data
-    } else {
-      ma.penetration=rbind(ma.penetration,pene.data)
-    }
   }
   
   
