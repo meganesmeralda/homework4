@@ -1,0 +1,60 @@
+---
+title: "Homework 4"
+subtitle: "ECON 470, Spring 2025"
+author: "Megan Zheng"
+format:
+  pdf:
+    output-file: "zheng_m_hwk4_1"
+    output-ext:  "pdf"
+    header-includes:
+      - \usepackage{float}
+      - \floatplacement{table}{H}
+---
+
+```{r}
+#| include: false
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, ggplot2, dplyr, lubridate, readr, readxl, hrbrthemes, fixest,
+               scales, gganimate, gapminder, gifski, png, tufte, plotly, OECD,
+               ggrepel, survey, foreign, devtools, pdftools, kableExtra, modelsummary,
+               kableExtra)
+```
+```{r}
+#| include: false
+#| eval: true
+
+final.data <- readRDS("/Users/meganzheng/Documents/GitHub/homework4/data/output/final_ma_data.rds")
+load("/Users/meganzheng/Documents/GitHub/homework4/submission1/results/hwk4_workspace.Rdata")
+```
+
+You can find my repository [here](https://github.com/meganesmeralda/homework4)
+
+\newpage 
+1. Remove all SNPs, 800-series plans, and prescription drug only plans (i.e., plans that do not offer Part C benefits). Provide a box and whisker plot showing the distribution of plan counts by county over time. Do you think that the number of plans is sufficient, too few, or too many? 
+```{r}
+#| echo: false
+
+final.data <- final.data %>%
+  filter(
+    snp == "No",
+    !(planid >= 800 & planid < 900),
+    !is.na(partc_score),
+    year %in% 2010:2015,
+    !is.na(avg_enrollment)
+  )
+
+## count plans by county and year 
+plan.counts <- final.data %>%
+  group_by(fips, year) %>%
+  summarise(plan_count = n(), .groups = "drop")
+
+
+## boxplot of plan counts over time 
+q1 <- ggplot(plan.counts, aes(x = as.factor(year), y = plan_count)) +
+  geom_boxplot() +
+  labs(x = "Year",
+       y = "Number of Plans per County") +
+  theme_minimal()
+print(q1)
+```
