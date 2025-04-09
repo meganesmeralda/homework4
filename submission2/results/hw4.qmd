@@ -4,7 +4,7 @@ subtitle: "ECON 470, Spring 2025"
 author: "Megan Zheng"
 format:
   pdf:
-    output-file: "zheng_m_hwk4_1"
+    output-file: "zheng_m_hwk4_2"
     output-ext:  "pdf"
     header-includes:
       - \usepackage{float}
@@ -25,36 +25,81 @@ pacman::p_load(tidyverse, ggplot2, dplyr, lubridate, readr, readxl, hrbrthemes, 
 #| eval: true
 
 final.data <- readRDS("/Users/meganzheng/Documents/GitHub/homework4/data/output/final_ma_data.rds")
-load("/Users/meganzheng/Documents/GitHub/homework4/submission1/results/hwk4_workspace.Rdata")
+load("/Users/meganzheng/Documents/GitHub/homework4/submission2/results/hwk4_workspace.Rdata")
 ```
 
 You can find my repository [here](https://github.com/meganesmeralda/homework4)
 
 \newpage 
-1. Remove all SNPs, 800-series plans, and prescription drug only plans (i.e., plans that do not offer Part C benefits). Provide a box and whisker plot showing the distribution of plan counts by county over time. Do you think that the number of plans is sufficient, too few, or too many? 
+Question 1: Remove all SNPs, 800-series plans, and prescription drug only plans (i.e., plans that do not offer Part C benefits). Provide a box and whisker plot showing the distribution of plan counts by county over time. Do you think that the number of plans is sufficient, too few, or too many? 
+```{r}
+#| echo: false
+q1
+```
+
+\newpage 
+Question 2: Provide bar graphs showing the distribution of star ratings in 2010, 2012, and 2015. How has this distribution changed over time? 
+```{r}
+#| echo: false
+print(q2)
+```
+
+\newpage 
+Question 3: Plot the average benchmark payment over time from 2010 through 2015. How much has the average benchmark payment risen over the years?
+```{r}
+#| echo: false
+q3
+```
+
+\newpage 
+Question 4: Plot the average share of Medicare Advantage (relative to all Medicare eligibles) over time from 2010 through 2015. Has Medicare Advantage increased or decreased in popularity? How does this share correlate with benchmark payments?
+```{r}
+#| echo: false
+q4
+```
+
+\newpage 
+Estimating ATEs
+
+Question 5: Calculate the running variable underlying the star rating. Provide a table showing the number of plans that are rounded up into a 3-star, 3.5-star, 4-star, 4.5-star, and 5-star rating.
+```{r}
+#| echo: false
+library(knitr)
+kable(rounded_data_2010, format = "markdown", col.names = c("Star Rating", "Rounded Up Count"), 
+    caption = "Rounded Up Star Ratings in 2010")
+```
+
+\newpage 
+Question 6: Using the RD estimator with a bandwidth of 0.125, provide an estimate of the effect of receiving a 3-star versus a 2.5 star rating on enrollments. Repeat the exercise to estimate the effects at 3.5 stars, and summarize your results in a table.
 ```{r}
 #| echo: false
 
-final.data <- final.data %>%
-  filter(
-    snp == "No",
-    !(planid >= 800 & planid < 900),
-    !is.na(partc_score),
-    year %in% 2010:2015,
-    !is.na(avg_enrollment)
-  )
+```
 
-## count plans by county and year 
-plan.counts <- final.data %>%
-  group_by(fips, year) %>%
-  summarise(plan_count = n(), .groups = "drop")
+\newpage 
+Question 7: Repeat your results for bandwidhts of 0.1, 0.12, 0.13, 0.14, and 0.15 (again for 3 and 3.5 stars). Show all of the results in a graph. How sensitive are your findings to the choice of bandwidth?
+```{r}
+#| echo: false
 
+```
 
-## boxplot of plan counts over time 
-q1 <- ggplot(plan.counts, aes(x = as.factor(year), y = plan_count)) +
-  geom_boxplot() +
-  labs(x = "Year",
-       y = "Number of Plans per County") +
-  theme_minimal()
-print(q1)
+\newpage 
+Question 8: Examine (graphically) whether contracts appear to manipulate the running variable. In other words, look at the distribution of the running variable before and after the relevent threshold values. What do you find?
+```{r}
+#| echo: false
+
+```
+
+\newpage 
+Question 9: Similar to question 4, examine whether plans just above the threshold values have different characteristics than contracts just below the threshold values. Use HMO and Part D status as your plan characteristics.
+```{r}
+#| echo: false
+
+```
+
+\newpage 
+Question 10: Summarize your findings from 5-9. What is the effect of increasing a star rating on enrollments? Briefly explain your results.
+```{r}
+#| echo: false
+
 ```
